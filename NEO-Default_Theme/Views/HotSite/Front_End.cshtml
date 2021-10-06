@@ -1,0 +1,240 @@
+@{
+    ViewBag.Title = "Front End";
+    Layout = "~/Views/Shared/Base/_Layout.cshtml";
+}
+
+<!-- ~/Views/Shared/Blocks/Banner/_FullBanner.cshtml -->
+@Html.Action("FullBanner", "Banner")
+
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Formul&aacuterio de cliente</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="@(Model != null ? Model : "") ten wide computer sixteen wide tablet sixteen wide mobile">
+            <div class="ui segment">
+                <div class="ui grid  very relaxed stackable middle aligned grid">
+                    <div class="row two column ">
+                        <div class="column">
+                            <form class="ui large form">
+                                <div class="field">
+                                    <label>Nome *</label>
+                                    <input type="text" id="nome" name="nome" placeholder="Nome" onblur="myfunction();" required>
+                                </div>
+                                <div class="field">
+                                    <label>E-mail *</label>
+                                    <input type="email" id="email" name="email" placeholder="exemple@exemple.com" onblur="myfunction();" required>
+                                </div>                               
+                                <div class="field">
+                                    <label for="telefone">Telefone ex.: (99) 99999-9999</label>
+                                    <input type="text" id="telefone" name="telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" onblur="myfunction();" required>
+                                </div>
+                                <div class="field">
+                                    <label>Assunto *</label>
+                                    <input type="text" id="assunto" name="assunto" placeholder="Assunto" onblur="myfunction();" required>
+                                </div>
+                                <div class="field">
+                                    <label>Mensagem *</label>
+                                    <textarea id="message" name="message" onblur="myfunction();" required></textarea>
+                                </div>
+                                <div class="ui center aligned segment">
+                                    <button class="ui button" type="submit" onClick="salvar();">Salvar</button>
+                                    <span id="msg"></span>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="divider-column">
+                            <div class="ui vertical divider">
+                            </div>
+                        </div>
+                        
+                        <div class="column">
+                            <form class="ui large form">
+                                <div class="field">
+                                    <label>Nome</label>
+                                    <input type="text" id="nomes" name="nomes" required>
+                                </div>
+                                <div class="field">
+                                    <label>E-mail</label>
+                                    <input type="email" id="emails" name="emails" required>
+                                </div>                               
+                                <div class="field">
+                                    <label>Telefone</label>
+                                    <input type="text" id="telefones" name="telefones" required>
+                                </div>
+                                <div class="field">
+                                    <label>Assunto</label>
+                                    <input type="text" id="assuntos" name="assuntos" required>
+                                </div>
+                                <div class="field">
+                                    <label>Mensagem</label>
+                                    <textarea id="messages" name="messages" required></textarea>
+                                </div>
+                                <div class="ui center aligned segment">
+                                    <button class="ui button" type="submit" onClick="editar();">Editar</button>
+                                    <span id="msgs"></span>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="ui center aligned segment">
+                            <button class="ui button" type="submit" onClick="recuperar();">Recuperar Dados</button>
+                            <span id="msgsRec"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       </div>
+    </div>
+
+<script>
+    function mask(o, f) {
+    setTimeout(function () {
+        var v = mphone(o.value);
+        if (v != o.value) {
+            o.value = v;
+        }
+        }, 1);
+    }
+
+    function mphone(v) {
+        var r = v.replace(/\D/g,"");
+        r = r.replace(/^0/,"");
+        if (r.length > 10) {
+            // 11+ digits. Format as 5+4.
+            r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/,"($1) $2-$3");
+        }
+        else if (r.length > 5) {
+            // 6..10 digits. Format as 4+4
+            r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/,"($1) $2-$3");
+        }
+        else if (r.length > 2) {
+            // 3..5 digits. Add (XX)
+            r = r.replace(/^(\d\d)(\d{0,5})/,"($1) $2");
+        }
+        else {
+            // 0..2 digits. Just add (XX)
+            r = r.replace(/^(\d*)/, "($1");
+        }
+        return r;
+    }
+
+    function salvar(){
+        var nome = document.getElementById("nome");
+        var email = document.getElementById("email");
+        var telefone = document.getElementById("telefone");
+        var assunto = document.getElementById("assunto");
+        var message = document.getElementById("message");
+
+        if(nome.value !== null && nome.value !== "" 
+        && email.value !== null && email.value !== ""
+        && telefone.value !== null && telefone.value !== ""
+        && assunto.value !== null && assunto.value !== ""
+        && message.value !== null && message.value !== ""){
+            sessionStorage.setItem("nome",  $("#nome").val());
+            sessionStorage.setItem("email",  $("#email").val());
+            sessionStorage.setItem("telefone",  $("#telefone").val());
+            sessionStorage.setItem("assunto",  $("#assunto").val());
+            sessionStorage.setItem("message",  $("#message").val());
+            $("#msg").html("Registro salvo!");
+        }else{
+            $("#msg").html("Registro n&atildeo foi salvo!");
+        }
+    }
+
+    function editar(){
+        var nome = document.getElementById("nomes");
+        var email = document.getElementById("emails");
+        var telefone = document.getElementById("telefones");
+        var assunto = document.getElementById("assuntos");
+        var message = document.getElementById("messages");
+
+        if(nome.value !== null && nome.value !== "" 
+        && email.value !== null && email.value !== ""
+        && telefone.value !== null && telefone.value !== ""
+        && assunto.value !== null && assunto.value !== ""
+        && message.value !== null && message.value !== ""){
+            sessionStorage.setItem("nome",  $("#nomes").val());
+            sessionStorage.setItem("email",  $("#emails").val());
+            sessionStorage.setItem("telefone",  $("#telefones").val());
+            sessionStorage.setItem("assunto",  $("#assuntos").val());
+            sessionStorage.setItem("message",  $("#messages").val());
+            $("#msgs").html("Registro editado!");
+        }else{
+            $("#msgs").html("Registro n&atildeo foi editado!");
+        }
+    }
+
+    function recuperar(){
+        var nome = sessionStorage.getItem("nome");
+        var email = sessionStorage.getItem("email");
+        var telefone = sessionStorage.getItem("telefone");
+        var assunto = sessionStorage.getItem("assunto");
+        var message = sessionStorage.getItem("message"); 
+        var dadosRecup = 0;
+
+        if(nome !== null && nome !== ""){
+            $("#nomes").val(nome);
+            dadosRecup += 1;
+        }else{
+            dadosRecup -= 1;
+        }
+        if(email !== null && email !== ""){
+            $("#emails").val(email);
+            dadosRecup += 1;
+        }else{
+            dadosRecup -= 1;
+        }
+        if(telefone !== null && telefone !== ""){
+            $("#telefones").val(telefone);
+            dadosRecup += 1;
+        }else{
+            dadosRecup -= 1;
+        }
+        if(assunto !== null && assunto !== ""){
+            $("#assuntos").val(assunto);
+            dadosRecup += 1;
+        }else{
+            dadosRecup -= 1;
+        }
+        if(message !== null && message !== ""){
+            $("#messages").val(message);
+            dadosRecup += 1;
+        }else{
+            dadosRecup -= 1;
+        }
+        if(dadosRecup == 5){
+            $("#msgsRec").html("Dados recuperados do sessionStorage!");    
+        }else{
+            $("#msgsRec").html("Os dados n&atildeo foram recuperados do sessionStorage!");
+        }
+    }
+
+    function myfunction() {
+        var nome = document.getElementById("nome");
+        $("#nomes").val(nome.value);
+        
+        var email = document.getElementById("email");
+        $("#emails").val(email.value);
+
+        var telefone = document.getElementById("telefone");
+        $("#telefones").val(telefone.value);
+
+        var assunto = document.getElementById("assunto");
+        $("#assuntos").val(assunto.value);
+
+        var message = document.getElementById("message");
+        $("#messages").val(message.value);
+    }
+
+</script>
